@@ -1,40 +1,54 @@
-package com.example. spinner;
+package com.example.explicitintent;
 
-import android.os. Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android. view. View;
-import android.widget.AdapterView;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    Spinner spinner;
-
-    TextView textView;
+    EditText name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super. onCreate (savedInstanceState);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        spinner = findViewById(R.id.spinner);
-        textView = findViewById(R.id.selected_text_view);
+        name = findViewById(R.id.name);
+    }
 
-        String[] items = {"None","Java", "Python", "HTML", "C"};
+    public void Click(View view) {
+        String n = name.getText().toString();
+        Intent i = new Intent(MainActivity.this, SecondActivity.class);
+        i.putExtra("name", n);
+        startActivity(i);
+    }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>( this,
-                android.R.layout.simple_spinner_dropdown_item, items);
+    public static class SecondActivity extends AppCompatActivity {
 
-        spinner.setAdapter(adapter);
-        spinner. setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                textView.setText("Selected: " + items[position]);
-            }
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            LinearLayout layout = new LinearLayout(this);
+            layout.setOrientation(LinearLayout.VERTICAL);
+            layout.setGravity(Gravity.CENTER);
+            layout.setPadding(30, 30, 30, 30);
+
+            TextView tv = new TextView(this);
+            tv.setTextSize(24);
+            tv.setGravity(Gravity.CENTER);
+
+            String n = getIntent().getStringExtra("name");
+            tv.setText("Welcome, " + n);
+
+            layout.addView(tv);
+            setContentView(layout);
+        }
     }
 }
